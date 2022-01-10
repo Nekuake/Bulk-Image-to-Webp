@@ -1,33 +1,30 @@
 from PIL import Image
 import sys
-from tkinter import Tk, filedialog
+from tkinter import filedialog
 import os
-from pathlib import Path
+
 
 def convertionImage(imagePath="", finalDir=""):
     print(imagePath)
-    image=Image.open(imagePath)
+    image = Image.open(imagePath)
     if image.width > image.height:
-        image=image.resize((512, int(image.height*512/image.width)))
+        image = image.resize((512, int(image.height * 512 / image.width)))
     elif image.width < image.height:
-        image=image.resize((int(image.width*512/image.height), 512))
+        image = image.resize((int(image.width * 512 / image.height), 512))
     else:
-        image=image.resize((512,512))
-    print((finalDir+"/"+(os.path.basename(imagePath).rsplit(".")[0])))
-    image.save(finalDir+"/"+(os.path.basename(imagePath).rsplit(".")[0])+".webp", "webp")
+        image = image.resize((512, 512))
+    image.save(finalDir + "/" + (os.path.basename(imagePath).rsplit(".")[0]) + ".webp", "webp")
 
 
-print(sys.argv)
+print(sys.argv)  # Might add drag-and-drop support
 if len(sys.argv) == 1:
     print("No filename/folder dropped.")
-    containerDir =filedialog.askdirectory(title="Select directory containing all PNGs")
+    containerDir = filedialog.askdirectory(title="Select directory containing all PNGs")
 else:
-    containerDir=sys.argv[1]
-finalDir=os.path.join(containerDir,"stickers")
+    containerDir = sys.argv[1]  # In case there's arguments like the folder path, just use them
+finalDir = os.path.join(containerDir, "WebP")
 if not os.path.isdir(finalDir):
     os.mkdir(finalDir)
 imagesList = next(os.walk(containerDir), (None, None, []))[2]  # [] if no file
 for x in range(len(imagesList)):
-    convertionImage(os.path.join(containerDir,imagesList[x]),finalDir)
-
-    
+    convertionImage(os.path.join(containerDir, imagesList[x]), finalDir)
